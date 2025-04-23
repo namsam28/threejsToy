@@ -1,0 +1,31 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@theme {
+  --ease-in-nintendo: cubic-bezier(.15,.8,.3,1.36);
+}
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+  --main-color: #e6001b;
+
+  --container-width: 1200px;
+}
+
+
+/*@media (prefers-color-scheme: dark) {*/
+/*  :root {*/
+/*    --background: #0a0a0a;*/
+/*    --foreground: #ededed;*/
+/*  }*/
+/*}*/
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+em {font-style: normal;}
