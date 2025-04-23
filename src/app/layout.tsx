@@ -14,8 +14,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko">
-      <body className={`antialiased`}>
-        <main>{children}</main>
+      <body className="antialiased">
+        <main className="min-h-screen min-w-screen">{children}</main>
         {/* svg symbol // */}
       </body>
     </html>
