@@ -21,6 +21,7 @@ function Player() {
   const onThrownAxe = woodenAxeStore(state => state.onThrownAxe);
   const setReloadAxe = woodenAxeStore(state => state.setReloadAxe);
 
+
   // 상태가 변경되었을 때 진행할 애니메이션
   useFrame((state, delta) => {
     const keys = getKeys();
@@ -63,8 +64,12 @@ function Player() {
       } else {
         setReloadAxe();
         const axePosition = axeRef.current.position;
-        console.log(axePosition);
+        const axeRotation = axeRef.current.rotation;
+        quaternion.setFromEuler(axeRotation);
+        console.log(axePosition,axeRotation);
         thrownAxeRef.current.setTranslation(axePosition);
+        thrownAxeRef.current.setRotation(quaternion);
+        console.log(thrownAxeRef.current);
       }
     }
     playerRef.current.setNextKinematicTranslation(translation);
@@ -81,8 +86,11 @@ function Player() {
         return state.throw;
       },
       value => {
-        console.log(value);
+        // console.log(value);
+        const axePosition = playerRef.current.position;
+        console.log(axePosition);
 
+        console.log(playerRef.current);
         onThrownAxe();
       },
     );
@@ -95,7 +103,6 @@ function Player() {
     // );
     return () => {
       unSubscribeKeys();
-      // unWoodenAxeStore();
     };
   }, []);
 

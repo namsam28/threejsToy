@@ -17,7 +17,6 @@ const woodenAxeStore = create(
       // 투척
       onThrownAxe: () => {
         if (get().isThrownAxe === false) {
-          console.log("던지기");
           set(state => ({
             isThrownAxe: true,
             throwTimestamp: Date.now(),

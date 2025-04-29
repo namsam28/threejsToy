@@ -1,10 +1,9 @@
 "use client";
-import Axe from "@app/woodenAxe/Axe";
 import * as THREE from "three";
 import Player from "@app/woodenAxe/Player";
 import {RigidBody, CuboidCollider} from "@react-three/rapier";
 
-const stageSize = 100;
+const stageSize = 10;
 const colliderSize = stageSize / 2;
 function Stage() {
   return (

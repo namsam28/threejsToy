@@ -1,5 +1,5 @@
 "use client";
-import {Clone, useGLTF, useKeyboardControls} from "@react-three/drei";
+import {Clone, useGLTF} from "@react-three/drei";
 import {forwardRef} from "react";
 
 const Axe = forwardRef((props, ref) => {
