@@ -1,7 +1,6 @@
 "use client";
-import {Canvas, useFrame} from "@react-three/fiber";
-import {Grid, OrbitControls} from "@react-three/drei";
-import * as THREE from "three";
+import {Canvas} from "@react-three/fiber";
+import {Grid} from "@react-three/drei";
 import Light from "./Light";
 import Cube from "./Cube";
 import {Leva} from "leva";
