@@ -4,7 +4,6 @@ import {PresentationControls} from "@react-three/drei";
 import * as THREE from "three";
 
 const euler = new THREE.Euler();
-const quaternion = new THREE.Quaternion();
 
 function Cube(){
   const boxRef = useRef();
