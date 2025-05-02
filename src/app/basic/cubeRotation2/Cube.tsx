@@ -2,15 +2,17 @@ import {useRef} from "react";
 import {useFrame} from "@react-three/fiber";
 import * as THREE from "three";
 import {useGesture} from "@use-gesture/react";
-import {cubeRotationStore} from "./store/cubeRotation";
+import {cubeRotationStore} from "./store/cubeRotationStore";
 
 const euler = new THREE.Euler();
 const tempEuler = new THREE.Euler();
+const quaternionClone = new THREE.Quaternion();
 
 function Cube() {
   const boxRef = useRef();
   const setIsRotation = cubeRotationStore(state => state.setIsRotation);
   const isRotation = cubeRotationStore(state => state.isRotation);
+  const isQuaternion = cubeRotationStore(state=>state.isQuaternion);
 
   /**
    useDrag에 onPointerDown, onPointerUp과 같은 이벤트처리가 되어있어
@@ -22,14 +24,29 @@ function Cube() {
       const {
         movement: [mx, my],
       } = params;
-      const rotationMx = mx * 0.01;
-      const rotationMy = my * 0.01;
-      const eulerValue = euler.set(tempEuler.x + rotationMy , tempEuler.y + rotationMx, tempEuler.z);
-      boxRef.current.setRotationFromEuler(eulerValue);
+
+      if(isQuaternion){
+        const rotationMx = mx * 0.0001;
+        const rotationMy = my * 0.0001;
+        const qx = new THREE.Quaternion();
+        const qy = new THREE.Quaternion();
+        qx.setFromAxisAngle(new THREE.Vector3(1, 0, 0), rotationMy);
+        qy.setFromAxisAngle(new THREE.Vector3(0, 1, 0), rotationMx);
+
+        // 쿼터니언을 곱해서 회전 누적
+        boxRef.current.quaternion.multiplyQuaternions(qy, boxRef.current.quaternion);
+        boxRef.current.quaternion.multiplyQuaternions(qx, boxRef.current.quaternion);
+      } else {
+        const rotationMx = mx * 0.01;
+        const rotationMy = my * 0.01;
+        const eulerValue = euler.set(tempEuler.x + rotationMy , tempEuler.y + rotationMx, tempEuler.z);
+        boxRef.current.setRotationFromEuler(eulerValue)
+      }
     },
     onDragStart: () => {
       setIsRotation(true);
       tempEuler.copy(boxRef.current.rotation);
+      quaternionClone.copy(boxRef.current.quaternion);
     },
     onDragEnd: () => {
       setIsRotation(false);
