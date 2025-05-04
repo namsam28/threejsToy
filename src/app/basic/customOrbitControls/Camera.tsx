@@ -1,5 +1,4 @@
 import {useThree, useFrame} from "@react-three/fiber";
-import {useGesture} from "@use-gesture/react";
 import {useEffect} from "react";
 import * as THREE from "three";
 import {Gesture} from "@use-gesture/vanilla"
@@ -28,29 +27,33 @@ function Camera() {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.near = 0.1;
     camera.far = 50;
-    // vector3.set(0,0,1);
-    // camera.position.set(vector3);
     // 구형 좌표계
     /*
     * r: 원점으로 부터의 거리(0,0,0)
     * phi : y축의 각도
     * theta : z축의 각도
     */
-
     camera.position.setFromSpherical(spherical);
     camera.updateProjectionMatrix(); // 처음 한번만 업데이트 처리 해주기
 
     const gesture = new Gesture(gl.domElement, {
       onDrag: (state)=>{
-        console.log(state.delta);
         const [deltaX,deltaY] = state.delta;
         const phi =  clamp(spherical.phi + deltaY * 0.01, 0.001, Math.PI/2 * 0.86);
         const theta =  spherical.theta + deltaX * 0.01;
         spherical.set(spherical.radius,phi,theta);
         camera.position.setFromSpherical(spherical);
-        console.log(camera);
+      },
+      onWheel:(state)=>{
+        const [directionX, directionY] = state.direction;
+        camera.zoom = clamp(camera.zoom + directionY * 0.1,1, 3);
+        camera.updateProjectionMatrix(); // 처음 한번만 업데이트 처리 해주기
       }
-    })
+    });
+
+    return ()=>{
+      gesture.destroy();
+    }
   }, []);
 
   return <></>;
