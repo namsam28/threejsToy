@@ -4,7 +4,7 @@ import {Grid} from "@react-three/drei";
 import Light from "./Light";
 import Cube from "./Cube";
 import {Leva} from "leva";
-import Camera from "./Camera";
+import Camera from "./Camera2";
 
 function Page(){
 
