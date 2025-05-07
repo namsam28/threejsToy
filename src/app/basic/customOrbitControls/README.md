@@ -74,3 +74,92 @@ gesture.destroy가 아닌 domElement가 언마운트되며 자동 정리됨.
 이 외에 방식으로는 현재 공식 문서나 이슈 상에서도 보이지 않는 것으로 확인됨
 
 5. react-spring 사용해서 damping, inertia 적용
+react-spring을 적용하기 전에 기존 Vector3와 Spherical를 사용하여 구현하는 방법이 존재.
+Vector3 함수에 lerp를 활용하기 위해 '카메라의 위치, 계산용 임시 Spherical 객체' 선언
+이후 onDrag, onWheel에서 이벤트로 전달받은 값을 토대로 Sperical에 값을 업데이트.  
+카메라 위치 Vector에 값을 반영 후 lerp 반영
+```jsx
+// Camera2 컴포넌트
+// 변수 선언
+const spherical = new THREE.Spherical(6,Math.PI/2 *0.6,Math.PI/2*0.5);
+const cameraTargetPosition = new THREE.Vector3(3,5,5);
+
+// 제스처 이벤트 처리
+const gesture = new Gesture(gl.domElement, {
+	onDrag: (state)=>{
+		const [deltaX,deltaY] = state.delta;
+		const phi =  clamp(spherical.phi + deltaY * 0.01, 0.001, Math.PI/2 * 0.86);
+		const theta =  spherical.theta + deltaX * 0.01;
+		spherical.set(spherical.radius,phi,theta);
+		cameraTargetPosition.setFromSpherical(spherical);
+	},
+	onWheel:(state)=>{
+		const [directionX, directionY] = state.direction;
+		spherical.radius = clamp(spherical.radius+ directionY * 1,1, 10);
+		cameraTargetPosition.setFromSpherical(spherical);
+	},
+	onDragEnd: () => {
+		// spherical 갱신
+		spherical.phi = phi.get();
+		spherical.theta = theta.get();
+	},
+	onWheelEnd: () => {
+		spherical.radius = radius.get();
+	}
+});
+
+// lerp 처리
+useFrame(() => {
+	camera.position.lerp(cameraTargetPosition,0.1);
+});
+```
+
+react-spring으로 처리하는 방법.
+이전 방식과 다르게 Sperical나 Vector에 값은 react-spring이 모두 담당.  
+애니메이션 매 프레임 계산은 react-spring에서 담당하기에 값만 업데이트 해주면 됨. 
+```jsx
+function Camera() {
+    const camera = useThree(state => state.camera);
+    const gl = useThree(state => state.gl);
+    const [{radius, phi, theta}, api] = useSpring(() => ({
+        radius: 6,
+        phi: (Math.PI / 2) * 0.6,
+        theta: (Math.PI / 2) * 0.5,
+        config: {
+            tension: 1200,
+            friction: 10,
+            mass: 1,
+            precision: 0.001,
+        },
+    }));
+    
+    useFrame(() => {
+        const newSpherical = new THREE.Spherical(radius.get(), phi.get(), theta.get());
+        camera.position.setFromSpherical(newSpherical);
+    });
+    
+    // 초기화 처리
+    useEffect(() => {
+        camera.fov = 75;
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.near = 0.1;
+        camera.far = 50;
+        camera.updateProjectionMatrix(); // 처음 한번만 업데이트 처리 해주기
+        
+        const gesture = new Gesture(gl.domElement, {
+            onDrag: ({delta: [dx, dy], last}) => {
+                api.start({
+                    phi: clamp(phi.get() + dy * 0.1, 0.001, Math.PI * 0.86),
+                    theta: theta.get() + dx * 0.1,
+                });
+            },
+            onWheel: ({direction: [, dy]}) => {
+                api.start({
+                    radius: clamp(radius.get() + dy, 2, 10),
+                });
+            },
+        });
+    }, []);
+    return <></>;
+}
+```

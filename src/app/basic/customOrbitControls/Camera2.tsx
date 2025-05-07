@@ -10,7 +10,6 @@ import {useSpring} from "@react-spring/three"
  FirstPersonControls : 1인칭 컨트롤(FlyControls에 대체 구현)
  */
 const spherical = new THREE.Spherical(6,Math.PI/2 *0.6,Math.PI/2*0.5);
-const newSpherical = new THREE.Spherical().copy(spherical);
 const cameraTargetPosition = new THREE.Vector3(3,5,5);
 function clamp( value, min, max ) {
   return Math.max( min, Math.min( max, value ) );
@@ -29,10 +28,7 @@ function Camera() {
   }));
 
   useFrame(() => {
-    // camera.position.lerp(cameraTargetPosition,0.1);
-
-    // newSpherical.set(radius.get(),phi.get(),theta.get());
-    // camera.position.setFromSpherical(newSpherical);
+    camera.position.lerp(cameraTargetPosition,0.1);
   });
 
   // 초기화 처리
@@ -54,23 +50,15 @@ function Camera() {
     const gesture = new Gesture(gl.domElement, {
       onDrag: (state)=>{
         const [deltaX,deltaY] = state.delta;
-        // const phi =  clamp(spherical.phi + deltaY * 0.01, 0.001, Math.PI/2 * 0.86);
-        // const theta =  spherical.theta + deltaX * 0.01;
-        // spherical.set(spherical.radius,phi,theta);
-        // cameraTargetPosition.setFromSpherical(spherical);
-        api.start({
-          phi: clamp(spherical.phi + deltaY * 0.01, 0.001, Math.PI / 2 * 0.86),
-          theta: spherical.theta + deltaX * 0.01
-        });
+        const phi =  clamp(spherical.phi + deltaY * 0.01, 0.001, Math.PI/2 * 0.86);
+        const theta =  spherical.theta + deltaX * 0.01;
+        spherical.set(spherical.radius,phi,theta);
+        cameraTargetPosition.setFromSpherical(spherical);
       },
       onWheel:(state)=>{
         const [directionX, directionY] = state.direction;
-        // spherical.radius = clamp(spherical.radius+ directionY * 1,1, 10);
-        // cameraTargetPosition.setFromSpherical(spherical);
-
-        api.start({
-          radius: clamp(spherical.radius + directionY * 1, 1, 10)
-        });
+        spherical.radius = clamp(spherical.radius+ directionY * 1,1, 10);
+        cameraTargetPosition.setFromSpherical(spherical);
       },
       onDragEnd: () => {
         // spherical 갱신
