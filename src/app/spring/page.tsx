@@ -9,6 +9,10 @@ const CONFIG_LINK = [
     title: "클릭 이동",
     link: "/spring/clickMove",
   },
+  {
+    title: "useChain 이벤트 처리",
+    link: "/spring/chainEvent",
+  },
 ];
 
 function Page() {

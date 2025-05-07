@@ -16,6 +16,7 @@ function Section(props) {
 function Page() {
   const [springs, api] = useSpring(() => ({
     from: { x: 0, opacity: 0.5 },
+
   }))
 
   // 클릭 이동
@@ -23,13 +24,29 @@ function Page() {
     api.start({
       from: {x:0, opacity: 0},
       to: {x:100, opacity:1},
+      loop:true,  // 반복
+      delay:500,
+      config:(key)=>{
+        if(key==="x"){
+          return {
+            mass: 5,
+            friction: 20,
+            tension: 120,
+          }
+        }
+        return {
+          mass: 1,
+          friction: 20,
+          tension: 100,
+        }
+      }
     })
   }
 
   return (
     <div className="w-full h-[100vh] bg-gray-100">
       <Section title="클릭 시 이동">
-        <Box style={...springs} onClick={handleClick} />
+        <Box style={{...springs}} onClick={handleClick} />
       </Section>
     </div>
   );
