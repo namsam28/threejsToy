@@ -15,7 +15,7 @@ function Page(){
       <Leva />
 
       <Canvas className="w-full h-full">
-        <Perf position="top-left" />
+        {/*<Perf position="top-left" />*/}
         <Light />
         <Camera />
         <InstancedCubes />

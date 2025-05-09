@@ -20,13 +20,11 @@ function InstancedCubes() {
       const dummy = new THREE.Object3D();
       meshRef.current.getMatrixAt(instanceId, dummy.matrix);
       dummy.matrix.decompose(dummy.position, dummy.quaternion, dummy.scale);  // decompose
-      console.log(dummy.position);
       setTarget(dummy.position.clone());  // 값 저장할 때는 무조건 clone
     }
   };
 
   const onPointerMissed = (e) => {
-    console.log("missed")
     const dummy = new THREE.Object3D();
     setTarget(dummy.position.clone());
   };

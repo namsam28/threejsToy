@@ -40,7 +40,6 @@ function Camera() {
         const phi = clamp(cameraSpherical.phi + deltaY * 0.01,0.001,Math.PI / 2 * 0.86);
         const theta =  cameraSpherical.theta + deltaX * 0.01;
         cameraSpherical.set(cameraSpherical.radius, phi, theta)
-        // camera.position.setFromSpherical(cameraSpherical);
       },
       onDragEnd: state => {
         dragging.current = false;
