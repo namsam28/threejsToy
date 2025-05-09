@@ -25,6 +25,7 @@
       "@assets/*": ["./src/assets/*"],
       "@components/*": ["./src/components/*"],
       "@store/*": ["./src/store/*"],
+      "@utils/*": ["./src/utils/*"]
     },
   },
   "include": ["global.d.ts","next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
