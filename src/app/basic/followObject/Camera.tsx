@@ -9,7 +9,6 @@ const cameraSpherical = new THREE.Spherical(6, Math.PI / 2.3, Math.PI / 2.5);
 function Camera() {
   const camera = useThree(state => state.camera);
   const gl = useThree(state => state.gl);
-  const raycaster = useThree(state => state.raycaster);
   const { target } = useCameraTarget();
   const dragging = useRef(false);
 
@@ -54,7 +53,6 @@ function Camera() {
     camera.far = 100;
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
-    // camera.position.setFromSpherical(cameraSpherical);
 
     camera.position.setFromSpherical(cameraSpherical);
   }, []);
