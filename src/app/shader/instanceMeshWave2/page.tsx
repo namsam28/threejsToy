@@ -6,8 +6,9 @@ import {Leva} from "leva";
 import Camera from "./Camera";
 import * as THREE from "three";
 import {Perf} from "r3f-perf";
-import InstancedCubes from "./InstancedCubes";
-THREE.ColorManagement.legacyMode = false;
+import WaveCubes from "./WaveCubes";
+
+// THREE.ColorManagement.legacy = false;
 
 function Page(){
   return (
@@ -18,7 +19,7 @@ function Page(){
         <Perf position="top-left" />
         <Light />
         <Camera />
-        <InstancedCubes />
+        <WaveCubes />
         <Grid cellSize={1} sectionSize={5} infiniteGrid={true} fadeDistance={50}/>
       </Canvas>
     </div>

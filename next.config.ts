@@ -27,11 +27,40 @@ const nextConfig: NextConfig = {
       ],
     });
 
+    config.module.rules.push({
+      test: /\.(glsl|vs|fs|vert|frag)$/,
+      use: [
+        {
+          loader: 'raw-loader'
+        },
+      ]
+    });
+
     return config;
   },
   experimental: {
     turbo: {
       rules: {
+        "*.glsl": {
+          loaders: ["raw-loader"],
+          as : "*.ts",
+        },
+        "*.vert": {
+          loaders: ["raw-loader"],
+          as : "*.ts",
+        },
+        "*.frag": {
+          loaders: ["raw-loader"],
+          as : "*.ts",
+        },
+        "*.vs": {
+          loaders: ["raw-loader"],
+          as : "*.ts",
+        },
+        "*.fs": {
+          loaders: ["raw-loader"],
+          as : "*.ts",
+        },
         "*.svg": {
           loaders: [
             {
@@ -57,6 +86,7 @@ const nextConfig: NextConfig = {
       },
     },
   },
+  transpilePackages:['three']
 };
 
 module.exports = nextConfig;
